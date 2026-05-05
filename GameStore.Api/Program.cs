@@ -5,9 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddValidation();
 
-var connString = "Data Source=game_store.db";
+builder.AddGameStoreDb();
 
-builder.Services.AddSqlite<GameStoreContext>(connString);
 
 var app = builder.Build();
 
