@@ -1,22 +1,8 @@
 import { useState } from "react";
-import { type Genre } from "../types";
-import { type GameDto } from "../types";
+import { useGames } from "../contexts/GamesContext";
 
-interface AddGameFormProps {
-  genres: Genre[];
-  onAddGame: (game: GameDto) => Promise<boolean>;
-  errors: Record<string, string[]>;
-  loading: boolean;
-  loadingGenres: boolean;
-}
-
-export const AddGameForm = ({
-  genres,
-  onAddGame,
-  errors,
-  loading,
-  loadingGenres,
-}: AddGameFormProps) => {
+export const AddGameForm = () => {
+  const { genres, addGame, errors, addingLoading, loadingGenres } = useGames();
   const [addingGame, setAddingGame] = useState(false);
 
   const hasFormErrors = Object.keys(errors).some(
@@ -62,7 +48,7 @@ export const AddGameForm = ({
                 releaseDate: formData.get("releaseDate") as string,
               };
 
-              const success = await onAddGame(newGame);
+              const success = await addGame(newGame);
 
               if (success) {
                 setAddingGame(false);
@@ -152,16 +138,16 @@ export const AddGameForm = ({
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={addingLoading}
               className="bg-blue-500 text-white px-4 py-2 mr-2 rounded hover:bg-blue-600 disabled:bg-blue-300"
             >
-              {loading ? "Adding..." : "Add Game"}
+              {addingLoading ? "Adding..." : "Add Game"}
             </button>
 
             <button
               type="button"
               onClick={() => setAddingGame(false)}
-              disabled={loading}
+              disabled={addingLoading}
               className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 disabled:bg-gray-300"
             >
               Cancel
